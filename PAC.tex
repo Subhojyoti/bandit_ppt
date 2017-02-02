@@ -1,0 +1,80 @@
+\begin{frame}
+\frametitle{Looking beyond Cumulative regret}
+\begin{itemize}
+\item<1-> Sometimes rather than worrying about cumulative regret we just want to be satisfied with a \emph{nearly good} arm with \emph{high probability}.
+\item<2-> This is called the $(\epsilon,\delta)$-guarantee or PAC-guarantee. 
+\item<3-> We are interested in finding an arm such that it's $\epsilon$ close to the optimal arm and we can guarantee this with $1-\delta$ probability.
+\item<4-> Note, that $\epsilon$ and $\delta$ are given as input and the main aim is to \emph{minimize the number of pulls of an arm $i$ so that it is $\epsilon$ close to the optimal arm with $1-\delta$ probability}. This is called Sample complexity. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{A Naive Algorithm}
+\begin{algorithm}[H]
+\caption{Naive Algorithm}
+\begin{algorithmic}[1]
+\State Input: $\epsilon > 0$, $\delta > 0$
+\State Output: An arm  
+\For{each arm $i\in A$}
+\State Sample it for $\ell=\dfrac{4}{\epsilon^{2}}\log \dfrac{2K}{\delta}$
+\State Let $\bar{X}_i$ be the average reward of arm $i$
+\EndFor
+\State Output $argmax_{i\in A}\lbrace \bar{X}_i \rbrace$
+\end{algorithmic}
+\end{algorithm}
+\cite{even2006action}
+\end{frame}
+
+\begin{frame}
+\frametitle{Sample Complexity of Naive Algorithm}
+\begin{theorem}
+The sample complexity of Naive Algorithm for a set of arms $K$ is given by,
+\begin{align*}
+O\bigg( \dfrac{K}{\epsilon^2}\log \big( \dfrac{K}{\delta} \big) \bigg)
+\end{align*}
+\end{theorem}
+\cite{even2006action}
+\end{frame}
+
+\begin{frame}
+\frametitle{Naive Algorithm Sample Complexity Proof}
+\begin{itemize}
+\item<1-> We want to bound the probability of the event $\bar{X}_i > \bar{X}^* $.
+\item<2-> But by $(\epsilon,\delta)$ definition we need $i$ only to be epsilon close to $*$. This means $\mu_i<\mu^* - \epsilon \rightarrow \mu_i + \dfrac{\epsilon}{2} <\mu^* - \dfrac{\epsilon}{2}$.
+\item<3-> So, we only need to bound the probability of, 
+\begin{align*}
+\mathbb{P}\lbrace\bar{X}_i > \bar{X}^* \rbrace &\leq \mathbb{P}\bigg\lbrace \bar{X}_i > \mu_i + \dfrac{\epsilon}{2}\bigg\rbrace + \mathbb{P}\bigg\lbrace \bar{X}^* < \mu^* - \dfrac{\epsilon}{2}\bigg\rbrace\\
+&\leq 2\exp\bigg(-2\big (\dfrac{\epsilon}{2}\big)^{2}\ell\bigg)\leq 2\exp\bigg(-2\dfrac{\epsilon^2}{4}. \dfrac{4}{\epsilon^{2}}\log \dfrac{2K}{\delta} \bigg)\leq \dfrac{\delta}{K}
+\end{align*}
+\item<4-> Summing over all the arms $K$ we get, $\dfrac{(K-1)\delta}{K}< \delta$
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Intuition about Median Elimination}
+\begin{itemize}
+\item<1-> Can we be more powerful than using Naive Algorithm?
+\item<2-> One simple way to modify Naive Algorithm is to divide the time horizon into phases.
+\item<3-> In each phase pull all the arms equal number of times.
+\item<4-> After that eliminate half the arms with a high guarantee that they are surely not $\epsilon$-optimal arms.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Median Elimination}
+\begin{algorithm}[H]
+\caption{Median Elimination}
+\begin{algorithmic}[1]
+\State Input: $\epsilon > 0$, $\delta > 0$
+\State Output: An arm  
+\State Set $S_1 =A$, $\epsilon_1 = \epsilon/4$, $\delta_1=\delta/2$ and $\ell=1$
+\For{Repeat till $|S_{\ell}|=1$}
+\State Sample every arm in $S_\ell$ for $\dfrac{4}{\epsilon_{\ell}^{2}}\log(\dfrac{3}{\delta_\ell})$ times and let $\bar{X}_i$ denote the average estimated payoff of $i$.
+\State Find median $m_{\ell}$ of all the surviving arms based on their $\bar{X}_{i},\forall i\in A$
+\State Eliminate all arms from $S_{\ell}$ such that $\bar{X}_{i}< m_{\ell}$ and create $S_{\ell+1}$.
+\State Reset Parameters: $\epsilon_{\ell+1}=\dfrac{3}{4}\epsilon$; $\delta_{\ell+1}=\dfrac{1}{2}\delta$; $\ell=\ell+1$
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+\cite{even2006action}
+\end{frame}
