@@ -1,0 +1,101 @@
+\begin{frame}
+\frametitle{Arm Elimination Algorithm}
+\begin{itemize}
+\item<1-> Arm Elimination (AE) algorithms proceeds in a phase-wise manner whereby they pull all the surviving arms equal number of times in each phase and then at the end of the phase proceeds to eliminate one or more arms from its active set. 
+\item<2-> We have seen that Median Elimination algorithm which is an AE algorithm, is more powerful than Naive Algorithm.
+\item<3-> Can we have such algorithm for minimizing Cumulative Regret?
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Enter UCB-Improved}
+\begin{itemize}
+\item<1-> The basic idea of UCB-Improved (\cite{auer2010ucb}) is nearly same as ME.
+\item<2-> Divide the horizon into phases and initialize parameters.
+\item<3-> Pull all surviving arms equal number of times during a phase.
+\item<4-> At the end of the phase eliminate some arms based on some criteria.
+\item<5-> Reset parameters and proceed to next phase.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Enter UCB-Improved}
+\begin{algorithm}[H]
+\caption{UCB-Improved}
+\begin{algorithmic}[1]
+\State {\bf Input:} Time horizon $n$
+\State {\bf Initialization:} Set $B_{0}:=A$ and $\epsilon_{0}:=1$.
+\For{$m=0,1,..\big \lfloor \dfrac{1}{2}\log_{2} \dfrac{n}{e}\big\rfloor$}	
+\State Pull each arm in $B_m$ so that the total number of times it has been pulled is $n_{m}=\bigg\lceil\dfrac{2\log{( n\epsilon_{m}^{2})}}{\epsilon_{m}}\bigg\rceil$. 
+\ArmElim
+\State For each $i \in B_{m}$, delete arm ${i}$ from $B_{m}$ if,
+\begin{align*}
+\bar{X}_{i} + \sqrt{\dfrac{\log{(n\epsilon_{m}^{2})}}{2 n_{m}}}  < \max_{{j}\in B_{m}}\bigg\lbrace\bar{X}_{j} -\sqrt{\dfrac{\log{( n\epsilon_{m}^{2})}}{2 n_{m}}} \bigg\rbrace
+\end{align*}
+\EndArmElim
+\ResParam
+\State Set $\epsilon_{m+1}:=\dfrac{\epsilon_{m}}{2}$, Set $B_{m+1}:=B_{m}$
+\EndResParam
+\State Stop if $|B_{m}|=1$ and pull ${i}\in B_{m}$ till $n$ is reached.
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+\end{frame}
+
+\begin{frame}
+\frametitle{Comparison of UCB-Improved,ME and UCB1}
+\begin{table}
+\caption{Cumulative Regret of UCB-Improved, UCB1}
+\begin{center}
+\begin{tabular}{|c|c|}
+\toprule
+Algorithm  & Upper bound on Cumulative Regret\\
+\midrule
+UCB1        &$O\bigg(\dfrac{K\log n}{\Delta} \bigg)$ \\\midrule
+UCB-Improved      &$O\bigg(\dfrac{K\log (n \Delta^2)}{\Delta} \bigg)$\\\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
+
+\begin{itemize}
+\item<1-> So, UCB-Improved is more powerful than UCB1 theoretically.
+\item<2-> UCB-Improved is more powerful than ME, because ME will always take $\log_{2} K$ number of phases to come up with the best arm (since it eliminates half the number of arms after every phase) whereas UCB-Improved eliminates arbitrary number of arms in any phase.
+\item<3-> Empirically, UCB-Improved beats UCB1 when $K$ is very large and gaps ($\Delta_{i},\forall i\in A$) are very small.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Finally, an experiment!!!}
+\begin{figure}
+    \centering
+    \begin{tabular}{c}
+    \subfigure[0.32\textwidth][Experiment $1$: $100$ Gaussian-distributed arms with $\mu_{i_{{i}\neq {*}:1-33}}=0.01$, $\mu_{i_{{i}\neq {*}:34-99}}=0.06$, $r^{*}_{i=100}=0.1$ and $\sigma_{i:1-100}^{2} = 0.3$]
+    {
+    		\pgfplotsset{
+		tick label style={font=\Large},
+		label style={font=\Large},
+		legend style={font=\Large},
+		}
+        \begin{tikzpicture}[scale=0.7]
+      	\begin{axis}[
+		xlabel={timestep},
+		ylabel={Cumulative Regret},
+		grid=major,
+        %clip mode=individual,grid,grid style={gray!30},
+        clip=true,
+        %clip mode=individual,grid,grid style={gray!30},
+  		legend style={at={(0.5,-0.2)},anchor=north, legend columns=3} ]
+      	% UCB
+		\addplot table{results/Expt1/UCB1comp_subsampled.txt};
+		\addplot table{results/Expt1/UCB_Improvedcomp_subsampled.txt};
+		\addplot table{results/Expt1/Med_Elimcomp_subsampled.txt};
+      	\legend{UCB1,UCB-Improved,Med-Elim}
+      	\end{axis}
+      	\end{tikzpicture}
+  		%\label{Fig:budgetExpt1}
+    }
+    \end{tabular}
+    \caption{Experiment with bandit}
+    %\label{fig:budgetExpt}
+\end{figure}
+\end{frame}

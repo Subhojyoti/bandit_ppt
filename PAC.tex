@@ -46,7 +46,7 @@ O\bigg( \dfrac{K}{\epsilon^2}\log \big( \dfrac{K}{\delta} \big) \bigg)
 \mathbb{P}\lbrace\bar{X}_i > \bar{X}^* \rbrace &\leq \mathbb{P}\bigg\lbrace \bar{X}_i > \mu_i + \dfrac{\epsilon}{2}\bigg\rbrace + \mathbb{P}\bigg\lbrace \bar{X}^* < \mu^* - \dfrac{\epsilon}{2}\bigg\rbrace\\
 &\leq 2\exp\bigg(-2\big (\dfrac{\epsilon}{2}\big)^{2}\ell\bigg)\leq 2\exp\bigg(-2\dfrac{\epsilon^2}{4}. \dfrac{4}{\epsilon^{2}}\log \dfrac{2K}{\delta} \bigg)\leq \dfrac{\delta}{K}
 \end{align*}
-\item<4-> Summing over all the arms $K$ we get, $\dfrac{(K-1)\delta}{K}< \delta$
+\item<4-> Summing over all the $K-1$ arms (arms excluding $*$) we get, $\dfrac{(K-1)\delta}{K}< \delta$
 \end{itemize}
 \end{frame}
 
@@ -78,3 +78,26 @@ O\bigg( \dfrac{K}{\epsilon^2}\log \big( \dfrac{K}{\delta} \big) \bigg)
 \end{algorithm}
 \cite{even2006action}
 \end{frame}
+
+\begin{frame}
+\frametitle{Comparison of Median Elimination, Naive Algorithm}
+
+\begin{table}
+\caption{Sample Complexity of Median Elimination, Naive Algorithm}
+\begin{center}
+\begin{tabular}{|c|c|}
+\toprule
+Algorithm  & Upper bound on Sample Complexity \\
+\midrule
+Naive        &$O\bigg(\dfrac{K}{\epsilon^2}\log \big( \dfrac{K}{\delta} \big) \bigg)$ \\\midrule
+ME      &$O\bigg(\dfrac{K}{\epsilon^2}\log big( \dfrac{1}{\delta} \big)  \bigg)$\\\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
+
+\begin{itemize}
+\item<1-> So clearly Naive algorithm uses more samples than Median Elimination to give us the same $(\epsilon,\delta)$ guarantee
+\end{itemize}
+
+\end{frame}
+
