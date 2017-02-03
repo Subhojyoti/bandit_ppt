@@ -24,22 +24,33 @@
 \caption{UCB-Improved}
 \begin{algorithmic}[1]
 \State {\bf Input:} Time horizon $n$
-\State {\bf Initialization:} Set $B_{0}:=A$ and $\epsilon_{0}:=1$.
+\State {\bf Initialization:} Set $B_{0}:=A$ and $\tilde{\Delta}_{0}:=1$.
 \For{$m=0,1,..\big \lfloor \dfrac{1}{2}\log_{2} \dfrac{n}{e}\big\rfloor$}	
-\State Pull each arm in $B_m$ so that the total number of times it has been pulled is $n_{m}=\bigg\lceil\dfrac{2\log{( n\epsilon_{m}^{2})}}{\epsilon_{m}}\bigg\rceil$. 
+\State Pull each arm in $B_m$, $n_{m}=\bigg\lceil\dfrac{2\log{( n\tilde{\Delta}_{m}^{2})}}{\epsilon_{m}}\bigg\rceil$ number of times.
+%so that the total  it has been pulled is
 \ArmElim
 \State For each $i \in B_{m}$, delete arm ${i}$ from $B_{m}$ if,
 \begin{align*}
-\bar{X}_{i} + \sqrt{\dfrac{\log{(n\epsilon_{m}^{2})}}{2 n_{m}}}  < \max_{{j}\in B_{m}}\bigg\lbrace\bar{X}_{j} -\sqrt{\dfrac{\log{( n\epsilon_{m}^{2})}}{2 n_{m}}} \bigg\rbrace
+\bar{X}_{i} + \sqrt{\dfrac{\log{(n\tilde{\Delta}_{m}^{2})}}{2 n_{m}}}  < \max_{{j}\in B_{m}}\bigg\lbrace\bar{X}_{j} -\sqrt{\dfrac{\log{( n\tilde{\Delta}_{m}^{2})}}{2 n_{m}}} \bigg\rbrace
 \end{align*}
 \EndArmElim
-\ResParam
-\State Set $\epsilon_{m+1}:=\dfrac{\epsilon_{m}}{2}$, Set $B_{m+1}:=B_{m}$
-\EndResParam
+%\ResParam
+\State Set $\tilde{\Delta}_{m+1}:=\dfrac{\tilde{\Delta}_{m}}{2}$, Set $B_{m+1}:=B_{m}$
+%\EndResParam
 \State Stop if $|B_{m}|=1$ and pull ${i}\in B_{m}$ till $n$ is reached.
 \EndFor
 \end{algorithmic}
 \end{algorithm}
+\end{frame}
+
+\begin{frame}
+\frametitle{Some technical details of UCB-Improved}
+\begin{itemize}
+\item<1-> We do not know the true means $\mu_i ,\forall i\in A$ of the distributions so we estimate it by the $\tilde{\Delta}$ by initializing it from $1$.
+\item<2-> All rewards are assume to be bounded between $[0,1]$ and so $\Delta_{i}\in [0,1],\forall i\in A$ as well.
+\item<3-> As opposed to UCB1, UCB-Improved has fixed confidence interval  $c_{m}=\sqrt{\dfrac{\log{(n\tilde{\Delta}_{m}^{2})}}{2 n_{m}}}$ for all arms in a particular phase.
+\item<4-> $c_m$ ensures that whenever $\tilde{\Delta}_{m}<\dfrac{\Delta_i}{2}$ in the $m$-th round, the arm $i$ gets eliminated.
+\end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -69,7 +80,7 @@ UCB-Improved      &$O\bigg(\dfrac{K\log (n \Delta^2)}{\Delta} \bigg)$\\\bottomru
 \begin{figure}
     \centering
     \begin{tabular}{c}
-    \subfigure[0.32\textwidth][Experiment $1$: $100$ Gaussian-distributed arms with $\mu_{i_{{i}\neq {*}:1-33}}=0.01$, $\mu_{i_{{i}\neq {*}:34-99}}=0.06$, $r^{*}_{i=100}=0.1$ and $\sigma_{i:1-100}^{2} = 0.3$]
+    \subfigure[0.32\textwidth][Experiment $1$: $100$ Gaussian-distributed arms with $\mu_{i_{{i}\neq {*}:1-33}}=0.01$, $\mu_{i_{{i}\neq {*}:34-99}}=0.06$, $r^{*}_{i=100}=0.1$ and $\sigma_{i:1-100}^{2} = 0.3$. For ME, $\epsilon=0.03,\delta=0.1$]
     {
     		\pgfplotsset{
 		tick label style={font=\Large},
@@ -86,9 +97,9 @@ UCB-Improved      &$O\bigg(\dfrac{K\log (n \Delta^2)}{\Delta} \bigg)$\\\bottomru
         %clip mode=individual,grid,grid style={gray!30},
   		legend style={at={(0.5,-0.2)},anchor=north, legend columns=3} ]
       	% UCB
-		\addplot table{results/Expt1/UCB1comp_subsampled.txt};
-		\addplot table{results/Expt1/UCB_Improvedcomp_subsampled.txt};
-		\addplot table{results/Expt1/Med_Elimcomp_subsampled.txt};
+		\addplot table{results/Expt1/UCB1comp_subsampled1.txt};
+		\addplot table{results/Expt1/UCB_Improvedcomp_subsampled1.txt};
+		\addplot table{results/Expt1/Med_Elimcomp_subsampled1.txt};
       	\legend{UCB1,UCB-Improved,Med-Elim}
       	\end{axis}
       	\end{tikzpicture}

@@ -39,8 +39,10 @@ O\bigg( \dfrac{K}{\epsilon^2}\log \big( \dfrac{K}{\delta} \big) \bigg)
 \begin{frame}
 \frametitle{Naive Algorithm Sample Complexity Proof}
 \begin{itemize}
-\item<1-> We want to bound the probability of the event $\bar{X}_i > \bar{X}^* $.
-\item<2-> But by $(\epsilon,\delta)$ definition we need $i$ only to be epsilon close to $*$. This means $\mu_i<\mu^* - \epsilon \rightarrow \mu_i + \dfrac{\epsilon}{2} <\mu^* - \dfrac{\epsilon}{2}$.
+\item<1-> We want to bound the probability of the event $\bar{X}_i > \bar{X}^* $. The goal is to find the minimum number of pulls required for an arm $i$ so that $\mu^{*}-\mu_i < \epsilon$.
+%But by $(\epsilon,\delta)$ definition we need $i$ only to be $\epsilon$ close to $*$.
+%Let $\epsilon$ be such that $\mu^* - \mu_i < \epsilon$.
+\item<2-> So, we need to bound the opposite condition for sample complexity because till that time we need to pull $i$. Let $i$ be an arm such that $\mu_i<\mu^* - \epsilon \rightarrow \mu_i + \dfrac{\epsilon}{2} <\mu^* - \dfrac{\epsilon}{2}$.
 \item<3-> So, we only need to bound the probability of, 
 \begin{align*}
 \mathbb{P}\lbrace\bar{X}_i > \bar{X}^* \rbrace &\leq \mathbb{P}\bigg\lbrace \bar{X}_i > \mu_i + \dfrac{\epsilon}{2}\bigg\rbrace + \mathbb{P}\bigg\lbrace \bar{X}^* < \mu^* - \dfrac{\epsilon}{2}\bigg\rbrace\\
@@ -55,8 +57,8 @@ O\bigg( \dfrac{K}{\epsilon^2}\log \big( \dfrac{K}{\delta} \big) \bigg)
 \begin{itemize}
 \item<1-> Can we be more powerful than using Naive Algorithm?
 \item<2-> One simple way to modify Naive Algorithm is to divide the time horizon into phases.
-\item<3-> In each phase pull all the arms equal number of times.
-\item<4-> After that eliminate half the arms with a high guarantee that they are surely not $\epsilon$-optimal arms.
+\item<3-> In each phase pull all the surviving arms equal number of times.
+\item<4-> After that eliminate half the surviving arms with a high guarantee that they are surely not $\epsilon$-optimal arms.
 \end{itemize}
 \end{frame}
 
@@ -70,7 +72,7 @@ O\bigg( \dfrac{K}{\epsilon^2}\log \big( \dfrac{K}{\delta} \big) \bigg)
 \State Set $S_1 =A$, $\epsilon_1 = \epsilon/4$, $\delta_1=\delta/2$ and $\ell=1$
 \For{Repeat till $|S_{\ell}|=1$}
 \State Sample every arm in $S_\ell$ for $\dfrac{4}{\epsilon_{\ell}^{2}}\log(\dfrac{3}{\delta_\ell})$ times and let $\bar{X}_i$ denote the average estimated payoff of $i$.
-\State Find median $m_{\ell}$ of all the surviving arms based on their $\bar{X}_{i},\forall i\in A$
+\State Find median $m_{\ell}$ of all surviving arms based on their $\bar{X}_{i},\forall i\in S_\ell$
 \State Eliminate all arms from $S_{\ell}$ such that $\bar{X}_{i}< m_{\ell}$ and create $S_{\ell+1}$.
 \State Reset Parameters: $\epsilon_{\ell+1}=\dfrac{3}{4}\epsilon$; $\delta_{\ell+1}=\dfrac{1}{2}\delta$; $\ell=\ell+1$
 \EndFor
@@ -90,7 +92,7 @@ O\bigg( \dfrac{K}{\epsilon^2}\log \big( \dfrac{K}{\delta} \big) \bigg)
 Algorithm  & Upper bound on Sample Complexity \\
 \midrule
 Naive        &$O\bigg(\dfrac{K}{\epsilon^2}\log \big( \dfrac{K}{\delta} \big) \bigg)$ \\\midrule
-ME      &$O\bigg(\dfrac{K}{\epsilon^2}\log big( \dfrac{1}{\delta} \big)  \bigg)$\\\bottomrule
+ME      &$O\bigg(\dfrac{K}{\epsilon^2}\log \big( \dfrac{1}{\delta} \big)  \bigg)$\\\bottomrule
 \end{tabular}
 \end{center}
 \end{table}

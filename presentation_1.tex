@@ -123,8 +123,8 @@ IIT Madras \\ % Your institution for the title page
 \caption{UCB1}
 \begin{algorithmic}[1]
 \State Pull each arm once
- \For{$t=K+1,..., T$}
-\State Pull the arm such that $\max_{i\in A}\bigg\lbrace\hat{\mu} + \sqrt{\dfrac{2\log t}{n_i}}\bigg\rbrace$
+ \For{$t=K+1,..., n$}
+\State Pull the arm such that $\max_{i\in A}\bigg\lbrace\bar{X}_{i} + \sqrt{\dfrac{2\log t}{s_i}}\bigg\rbrace$
  \EndFor
 \end{algorithmic}
 \end{algorithm}
@@ -149,10 +149,10 @@ IIT Madras \\ % Your institution for the title page
 \frametitle{Some Other Bandits and Applications}
 
 \begin{itemize}
-\item Adversarial Bandits : Used in Investment in Stock Markets
-\item Contextual Bandits : Used in online Advertisement/news article selection
-\item Budgeted Bandits : Used in Clinical trials
-\item Distributed Bandits : Used in packet routing through a network
+\item<1-> Adversarial Bandits : In adversarial bandits we consider that the underlying distribution is non-stationary. Used in Investment in Stock Markets
+\item<2-> Contextual Bandits : In this setup we consider that there is a context, a feature vector associated with each arm that is revealed once the arm is pulled. Based on that the learner must predict the next arm to pull. Used in online Advertisement/news article selection
+\item<3-> Pure exploration Bandits : In this setup the sole consideration is to conduct as much exploration as possible within a limited number of pulls and then suggest the best arm(s). Used in Clinical trials.
+%\item Distributed Bandits : Used in packet routing through a network
 \end{itemize}
 \end{frame}
 

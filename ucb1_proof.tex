@@ -29,11 +29,11 @@ T_{i}(n)&\leq \ell + \sum_{t=1}^{\infty}\sum_{s=1}^{t-1}\sum_{s_i =\ell}^{t-1}\l
 \frametitle{UCB1 Proof}
 \begin{itemize}
 \item<1-> The main argument lies in this, 
-\includegraphics[scale=0.19]{img/UCB1_pic} 
+\includegraphics[scale=0.22]{img/UCB1_pic2} 
 \item<1-> \begin{align*}
-\bar{X}^{*}_{s}&\leq \mu^* - c_{t,s}\\
-\bar{X}_{i,s_i}&\geq \mu + c_{t,s_i}\\
-\mu^* & < \mu_i + 2c_{t,s_i}
+\bar{X}^{*}_{s}\leq \mu^* - c_{t,s};
+\bar{X}_{i,s_i}\geq \mu_i + c_{t,s_i};
+\mu^*  < \mu_i + 2c_{t,s_i}
 \end{align*}
 \end{itemize}
 \end{frame}
@@ -44,7 +44,7 @@ T_{i}(n)&\leq \ell + \sum_{t=1}^{\infty}\sum_{s=1}^{t-1}\sum_{s_i =\ell}^{t-1}\l
 \item<0-> Now, we get the value of confidence interval $c_{t,s_i}=\sqrt{\dfrac{2\ln t}{s_i}}$ by plugging its value in the below equations,
 \item<1-> $\mathbb{P}\lbrace  \bar{X}^{*}_{s}\leq \mu^* - c_{t,s}\rbrace\leq \exp\bigg(-2\big(\sqrt{\dfrac{2\ln t}{s}}\big)^2 s\bigg) \leq e^{-4\log t} \leq t^{-4}$
 \item<2-> $\mathbb{P}\lbrace \bar{X}_{i,s_i} \geq \mu + c_{t,s_i}\rbrace\leq \exp\bigg(-2\big(\sqrt{\dfrac{2\ln t}{s_i}}\big)^2 s_i\bigg) \leq e^{-4\log t} \leq t^{-4}$
-\item<3-> And by plugging $\ell=\bigg\lceil \dfrac{8\log n}{\Delta_{i}^{2}}\bigg\rceil$ in,
+\item<3-> And by plugging $\ell=s_i =\bigg\lceil \dfrac{8\log n}{\Delta_{i}^{2}}\bigg\rceil$ in,
 \begin{align*}
 \mu^* - \mu_i - 2c_{t,s_i} = \mu^* - \mu_i - 2\sqrt{\dfrac{2\log t}{s_i}} \geq \mu^* - \mu_i -\Delta_i =0
 \end{align*} 
@@ -63,7 +63,7 @@ we get $\mu^* - \mu_i - 2c_{t,s_i} \geq 0$. So for any pulls greater than $\ell$
 \item<3-> So finally the cumulative regret is,
 \begin{align*}
 \mathbb{E}[R_n]&\leq \sum_{i\in A}\mathbb{E}[T_i (n)]\Delta_i
-\leq \dfrac{8\log n}{\Delta_{i}} + \Delta_{i}\bigg(1 + \dfrac{\pi^{2}}{3}\bigg)
+\leq \sum_{i\in A}\dfrac{8\log n}{\Delta_{i}} + \sum_{i\in A}\Delta_{i}\bigg(1 + \dfrac{\pi^{2}}{3}\bigg)
 \end{align*}
 \end{itemize}
 \end{frame}
